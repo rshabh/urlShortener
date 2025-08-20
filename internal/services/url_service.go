@@ -3,6 +3,7 @@ package services
 import (
 	"URLSHORTENER/internal/models"
 	"URLSHORTENER/internal/store"
+	"log"
 	"math/rand"
 	"time"
 )
@@ -26,10 +27,22 @@ func String(length int) string {
 	return StringWithCharset(length, charset)
 }
 
-func GetShort(l models.Long) models.Short {
+func GetShort(l models.Long) {
 
 	s := String(5)
 	store.Url_map[l.Long] = s
-	return models.Short{Short: s}
+}
 
+func GetMap() map[string]string {
+	return store.Url_map
+}
+
+func GetLongFromShort(s string) string {
+	for key, value := range store.Url_map {
+		if value == s {
+			return key
+		}
+	}
+	log.Panic("url not saved")
+	return ""
 }
