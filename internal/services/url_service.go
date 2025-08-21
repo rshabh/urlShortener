@@ -3,46 +3,49 @@ package services
 import (
 	"URLSHORTENER/internal/models"
 	"URLSHORTENER/internal/store"
+	"context"
+	"fmt"
 	"log"
-	"math/rand"
-	"time"
 )
 
-// random string or url generation
-const charset = "abcdefghijklmnopqrstuvwxyz" +
-	"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+func InsertURL(short string, long string) error {
+	query := `INSERT INTO public.url (code, long_url) VALUES ($1, $2)`
 
-var seededRand *rand.Rand = rand.New(
-	rand.NewSource(time.Now().UnixNano()))
-
-func StringWithCharset(length int, charset string) string {
-	b := make([]byte, length)
-	for i := range b {
-		b[i] = charset[seededRand.Intn(len(charset))]
+	_, err := store.DB.Exec(context.Background(), query, short, long)
+	if err != nil {
+		return fmt.Errorf("failed to insert url: %w", err)
 	}
-	return string(b)
+
+	return nil
 }
 
-func String(length int) string {
-	return StringWithCharset(length, charset)
+func FindLongFromShort(short string) (string, error) {
+	var long string
+	query := `SELECT long FROM public.url WHERE short = $1 `
+	err := store.DB.QueryRow(context.Background(), query, short).Scan(&long)
+	if err != nil {
+		return "", fmt.Errorf("failed to find url for code %s: %w", short, err)
+	}
+
+	return long, nil
+
 }
 
-func GetShort(l models.Long) {
+func FindShortFromLong(long string) (string, error) {
+	var short string
+	query := `SELECT short FROM public.url WHERE long = $1 `
+	err := store.DB.QueryRow(context.Background(), query, long).Scan(&short)
+	if err != nil {
+		return "", fmt.Errorf("failed to find url for code %s: %w", long, err)
+	}
 
+	return short, nil
+
+}
+
+func GetShortAndInsert(l models.Long) {
 	s := String(5)
-	store.Url_map[l.Long] = s
-}
-
-func GetMap() map[string]string {
-	return store.Url_map
-}
-
-func GetLongFromShort(s string) string {
-	for key, value := range store.Url_map {
-		if value == s {
-			return key
-		}
-	}
-	log.Panic("url not saved")
-	return ""
+	log.Println(s)
+	log.Println(l.Long)
+	InsertURL(s, l.Long)
 }

@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func SaveInMap(w http.ResponseWriter, r *http.Request) {
+func SaveInDb(w http.ResponseWriter, r *http.Request) {
 	var l models.Long
 
 	err := json.NewDecoder(r.Body).Decode(&l)
@@ -19,24 +19,25 @@ func SaveInMap(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	services.GetShort(l)
+	services.GetShortAndInsert(l)
 	log.Println("The long url is saved in the map")
 
-	m := services.GetMap()
-	s := "http://localhost:8080/redirect/" + m[l.Long]
+	m, err := services.FindShortFromLong(l.Long)
+	if err != nil {
+		log.Println("some error occured in saveInDB function")
+	}
+	s := "http://localhost:8080/" + m
 	json.NewEncoder(w).Encode(s)
 
 }
 
 func Redirect(w http.ResponseWriter, r *http.Request) {
 	s := chi.URLParam(r, "s")
-	l := services.GetLongFromShort(s)
+	l, err := services.FindLongFromShort(s)
+	if err != nil {
+		log.Println("error occured in redirect function")
+	}
 	log.Println("the short is" + s)
 	log.Println("the long is " + l)
 	http.Redirect(w, r, l, http.StatusMovedPermanently)
-}
-
-func GetMap(w http.ResponseWriter, r *http.Request) {
-	m := services.GetMap()
-	json.NewEncoder(w).Encode(m)
 }

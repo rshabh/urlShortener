@@ -8,9 +8,8 @@ import (
 
 func RegisterRoutes() *chi.Mux {
 	r := chi.NewRouter()
-	r.Post("/generatedPath", handlers.SaveInMap)
-	r.Get("/seeMap", handlers.GetMap)
-	r.Get("/redirect/{s}", handlers.Redirect)
+	r.Post("/generatedPath", handlers.SaveInDb)
+	r.Get("/", handlers.Redirect)
 
 	return r
 
