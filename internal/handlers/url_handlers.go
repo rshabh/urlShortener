@@ -32,6 +32,7 @@ func SaveInDb(w http.ResponseWriter, r *http.Request) {
 }
 
 func Redirect(w http.ResponseWriter, r *http.Request) {
+	log.Println("redirect funcion called")
 	s := chi.URLParam(r, "s")
 	l, err := services.FindLongFromShort(s)
 	if err != nil {
