@@ -20,7 +20,7 @@ func SaveInDb(w http.ResponseWriter, r *http.Request) {
 	}
 
 	services.GetShortAndInsert(l)
-	log.Println("The long url is saved in the map")
+	log.Println("The long url is saved in the db")
 
 	m, err := services.FindShortFromLong(l.Long)
 	if err != nil {
