@@ -15,14 +15,11 @@ func InitDB() {
 	ctx := context.Background()
 	connStr := "postgres://postgres:27042002@localhost:5432/practisedb"
 
-	// connStr := "postgres://postgres:27042002@localhost:5432/practisedb"
-
 	pool, err := pgxpool.New(ctx, connStr)
 	if err != nil {
 		log.Fatalf("Unable to connect to database: %v\n", err)
 	}
 
-	// test connection
 	err = pool.Ping(ctx)
 	if err != nil {
 		log.Fatalf("Could not ping DB: %v\n", err)
