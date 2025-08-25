@@ -19,7 +19,7 @@ func GetUrl(ctx context.Context, l models.Long) string {
 	if err != nil {
 		log.Println("some error occured in saveInDB function")
 	}
-	s := "http://localhost:8080/" + m
+	s := "http://localhost:8080/redirect/" + m
 
 	return s
 }
