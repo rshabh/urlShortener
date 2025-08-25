@@ -19,25 +19,16 @@ func SaveInDb(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	services.GetShortAndInsert(l)
+	services.GetShortAndInsert(r.Context(), l)
 	log.Println("The long url is saved in the db")
-
-	m, err := services.FindShortFromLong(l.Long)
-	if err != nil {
-		log.Println("some error occured in saveInDB function")
-	}
-	s := "http://localhost:8080/" + m
-	json.NewEncoder(w).Encode(s)
+	json.NewEncoder(w).Encode(services.GetUrl(r.Context(), l))
 
 }
 
 func Redirect(w http.ResponseWriter, r *http.Request) {
 	log.Println("redirect funcion called")
 	s := chi.URLParam(r, "s")
-	l, err := services.FindLongFromShort(s)
-	if err != nil {
-		log.Println("error occured in redirect function")
-	}
+	l := services.GetLong(r.Context(), s)
 	log.Println("the short is" + s)
 	log.Println("the long is " + l)
 	http.Redirect(w, r, l, http.StatusMovedPermanently)
