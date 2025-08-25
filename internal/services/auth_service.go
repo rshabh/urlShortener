@@ -26,12 +26,12 @@ func Register(ctx context.Context, u models.User) {
 
 }
 
-func Login(ctx context.Context, ul models.UserLogin) {
+func Login(ctx context.Context, ul models.UserLogin) bool {
 
 	u := store.FindUserByUname(ctx, ul.Uname)
 	if u.Uname == "" {
 		log.Println("no such user is present")
-		return
+		log.Panic("no user found")
 	}
 
 	hp := u.Password
@@ -39,9 +39,10 @@ func Login(ctx context.Context, ul models.UserLogin) {
 	lerr := bcrypt.CompareHashAndPassword([]byte(hp), []byte(ul.Password))
 	if lerr != nil {
 		fmt.Println("password does not match")
-		return
+		return false
 	}
 
 	fmt.Println("password matches")
+	return true
 
 }

@@ -3,7 +3,9 @@ package handlers
 import (
 	"URLSHORTENER/internal/models"
 	"URLSHORTENER/internal/services"
+	"URLSHORTENER/utils"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -11,10 +13,30 @@ import (
 )
 
 func SaveInDb(w http.ResponseWriter, r *http.Request) {
+	//// for jwt
+
+	w.Header().Set("Content-Type", "application/json")
+	tokenString := r.Header.Get("Authorization")
+	if tokenString == "" {
+		w.WriteHeader(http.StatusUnauthorized)
+		fmt.Fprint(w, "Missing authorization header")
+		return
+	}
+	tokenString = tokenString[len("Bearer "):]
+
+	err := utils.VerifyToken(tokenString)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		fmt.Fprint(w, "Invalid token")
+		return
+	}
+
+	fmt.Fprint(w, "Welcome to the the protected area of saving in db")
+
 	var l models.Long
 
-	err := json.NewDecoder(r.Body).Decode(&l)
-	if err != nil {
+	lerr := json.NewDecoder(r.Body).Decode(&l)
+	if lerr != nil {
 		http.Error(w, "Error decoding request body", http.StatusBadRequest)
 		return
 	}
@@ -26,6 +48,7 @@ func SaveInDb(w http.ResponseWriter, r *http.Request) {
 }
 
 func Redirect(w http.ResponseWriter, r *http.Request) {
+
 	log.Println("redirect funcion called")
 	s := chi.URLParam(r, "s")
 	l := services.GetLong(r.Context(), s)
