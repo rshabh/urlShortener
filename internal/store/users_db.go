@@ -12,12 +12,12 @@ import (
 func CreateUser(ctx context.Context, u models.User) {
 	u.Id = uuid.New()
 	u.CreatedAt = time.Now()
-	query := `INSERT INTO public.users (id,uname,password,createdAt) VALUES ($1, $2, $3, $4)`
+	query := `INSERT INTO public.users (id,uname,password, "createdAt") VALUES ($1, $2, $3, $4)`
 
 	_, err := DB.Exec(ctx, query, u.Id, u.Uname, u.Password, u.CreatedAt)
 
 	if err != nil {
-		log.Panic("Error in create user query")
+		log.Println("Error in create user query", err)
 		return
 	}
 
@@ -27,10 +27,10 @@ func CreateUser(ctx context.Context, u models.User) {
 
 func FindUserByUname(ctx context.Context, uname string) models.User {
 	var u models.User
-	query := `SELECT * FROM public.users WHERE uname = uname;`
-	err := DB.QueryRow(ctx, query, uname).Scan(&u)
+	query := `SELECT id, uname, password, "createdAt" FROM public.users WHERE uname = $1;`
+	err := DB.QueryRow(ctx, query, uname).Scan(&u.Id, &u.Uname, &u.Password, &u.CreatedAt)
 	if err != nil {
-		log.Panic("some error ocuured in findUserByUname function")
+		log.Println("some error ocuured in findUserByUname function", err)
 	}
 
 	return u

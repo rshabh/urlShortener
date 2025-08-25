@@ -12,3 +12,8 @@ type User struct {
 	Password  string    `json:"password"`
 	CreatedAt time.Time `json:"createdAt"`
 }
+
+type UserLogin struct {
+	Uname    string `json:"uname"`
+	Password string `json:"password"`
+}
