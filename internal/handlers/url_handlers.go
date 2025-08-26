@@ -3,7 +3,7 @@ package handlers
 import (
 	"URLSHORTENER/internal/models"
 	"URLSHORTENER/internal/services"
-	"URLSHORTENER/utils"
+	"URLSHORTENER/internal/utils"
 	"encoding/json"
 	"fmt"
 	"log"

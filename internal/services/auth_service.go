@@ -3,7 +3,7 @@ package services
 import (
 	"URLSHORTENER/internal/models"
 	"URLSHORTENER/internal/store"
-	"URLSHORTENER/utils"
+	"URLSHORTENER/internal/utils"
 	"context"
 	"fmt"
 	"log"
