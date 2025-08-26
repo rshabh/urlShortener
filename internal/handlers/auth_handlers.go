@@ -3,7 +3,6 @@ package handlers
 import (
 	"URLSHORTENER/internal/models"
 	"URLSHORTENER/internal/services"
-	"URLSHORTENER/utils"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -28,22 +27,13 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	b := services.Login(r.Context(), ul)
-	if b {
-		ts, err := utils.CreateToken(ul.Uname)
-
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			fmt.Println("No username found")
-		}
-
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprint(w, ts)
+	ts := services.Login(r.Context(), ul)
+	if ts == "" {
+		w.WriteHeader(http.StatusInternalServerError)
 		return
-
 	}
 
-	w.WriteHeader(http.StatusUnauthorized)
-	fmt.Fprint(w, "Invalid credentials")
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprint(w, ts)
 
 }

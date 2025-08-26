@@ -31,7 +31,7 @@ func SaveInDb(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Fprint(w, "Welcome to the the protected area of saving in db")
+	fmt.Println("Welcome to the the protected area of saving in db")
 
 	var l models.Long
 
@@ -53,6 +53,6 @@ func Redirect(w http.ResponseWriter, r *http.Request) {
 	s := chi.URLParam(r, "s")
 	l := services.GetLong(r.Context(), s)
 	log.Println("the short is" + s)
-	log.Println("the long is " + l)
+	log.Println("the long is :=  " + l)
 	http.Redirect(w, r, l, http.StatusMovedPermanently)
 }

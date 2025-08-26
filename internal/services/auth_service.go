@@ -3,6 +3,7 @@ package services
 import (
 	"URLSHORTENER/internal/models"
 	"URLSHORTENER/internal/store"
+	"URLSHORTENER/utils"
 	"context"
 	"fmt"
 	"log"
@@ -26,7 +27,7 @@ func Register(ctx context.Context, u models.User) {
 
 }
 
-func Login(ctx context.Context, ul models.UserLogin) bool {
+func Login(ctx context.Context, ul models.UserLogin) string {
 
 	u := store.FindUserByUname(ctx, ul.Uname)
 	if u.Uname == "" {
@@ -39,10 +40,18 @@ func Login(ctx context.Context, ul models.UserLogin) bool {
 	lerr := bcrypt.CompareHashAndPassword([]byte(hp), []byte(ul.Password))
 	if lerr != nil {
 		fmt.Println("password does not match")
-		return false
+		return ""
 	}
 
-	fmt.Println("password matches")
-	return true
+	//create token logic
+
+	ts, err := utils.CreateToken(ul.Uname)
+
+	if err != nil {
+		fmt.Println("No username found")
+		return ""
+	}
+
+	return ts
 
 }
