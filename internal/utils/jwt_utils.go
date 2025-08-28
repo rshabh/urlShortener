@@ -8,23 +8,23 @@ import (
 )
 
 type MyClaims struct {
-	Uname string `json:"uname"`
+	Uid string `json:"uid"`
 	jwt.RegisteredClaims
 }
 
 var secretKey = []byte("jwt_secret_key")
 
-func CreateToken(username string) (string, error) {
+func CreateToken(uuid string) (string, error) {
 	expirationTime := time.Now().Add(24 * time.Hour)
 
 	claims := &MyClaims{
-		Uname: username,
+		Uid: uuid,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			NotBefore: jwt.NewNumericDate(time.Now()),
 			Issuer:    "my-app",
-			Subject:   username,
+			Subject:   uuid,
 			Audience:  []string{"users"},
 		},
 	}
