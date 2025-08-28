@@ -13,6 +13,10 @@ import (
 
 var cost int = bcrypt.DefaultCost
 
+type contextKey string
+
+const UserKey contextKey = "uuid"
+
 func Register(ctx context.Context, u models.User) {
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), cost)
@@ -45,7 +49,7 @@ func Login(ctx context.Context, ul models.UserLogin) string {
 
 	//create token logic
 
-	ts, err := utils.CreateToken(ul.Uname)
+	ts, err := utils.CreateToken(u.Id.String())
 
 	if err != nil {
 		fmt.Println("No username found")

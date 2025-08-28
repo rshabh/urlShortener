@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 )
 
 func Register(w http.ResponseWriter, r *http.Request) {
@@ -33,7 +34,19 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	cookie := http.Cookie{
+		Name:     "jwt_token",
+		Value:    ts,
+		Expires:  time.Now().Add(time.Hour * 24), // Match JWT expiry
+		HttpOnly: true,                           // Important for security
+		Secure:   true,                           // Use `Secure: true` in production with HTTPS
+		Path:     "/",                            // Make cookie available across the entire site
+		SameSite: http.SameSiteLaxMode,
+	}
+
+	http.SetCookie(w, &cookie)
+
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprint(w, ts)
+	fmt.Fprint(w, cookie.Value)
 
 }
