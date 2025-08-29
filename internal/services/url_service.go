@@ -17,7 +17,7 @@ func GetShortAndInsert(ctx context.Context, l models.Long, fk_user_id string) {
 func GetUrl(ctx context.Context, l models.Long, u string) string {
 	m, err := store.FindShortFromLong(ctx, l.Long, u)
 	if err != nil {
-		log.Println("some error occured in saveInDB function")
+		log.Println("some error occured in saveInDB function", err)
 	}
 	s := "http://localhost:8080/redirect/" + m
 

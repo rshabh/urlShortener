@@ -40,8 +40,8 @@ func FindLongFromShort(ctx context.Context, short string, fk_user_id string) (st
 
 func FindShortFromLong(ctx context.Context, long string, fk_user_id string) (string, error) {
 	var short string
-	query := `SELECT short FROM public.url WHERE long = $1 && fk_user_id = $2`
-	err := DB.QueryRow(ctx, query, long).Scan(&short)
+	query := `SELECT short FROM public.url WHERE long = $1 AND fk_user_id = $2`
+	err := DB.QueryRow(ctx, query, long, fk_user_id).Scan(&short)
 	if err != nil {
 		return "", err
 	}

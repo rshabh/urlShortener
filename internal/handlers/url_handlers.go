@@ -13,16 +13,8 @@ import (
 )
 
 func SaveInDb(w http.ResponseWriter, r *http.Request) {
-	//// for jwt
 
 	w.Header().Set("Content-Type", "application/json")
-	// tokenString := r.Header.Get("Authorization")
-	// if tokenString == "" {
-	// 	w.WriteHeader(http.StatusUnauthorized)
-	// 	fmt.Fprint(w, "Missing authorization header")
-	// 	return
-	// }
-	// tokenString = tokenString[len("Bearer "):]
 
 	cookie, err := r.Cookie("jwt_token")
 
@@ -58,6 +50,8 @@ func SaveInDb(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error decoding request body", http.StatusBadRequest)
 		return
 	}
+
+	log.Println(u)
 
 	services.GetShortAndInsert(r.Context(), l, u)
 	log.Println("The long url is saved in the db")
