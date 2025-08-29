@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/spf13/viper"
 )
 
 type MyClaims struct {
@@ -12,7 +13,9 @@ type MyClaims struct {
 	jwt.RegisteredClaims
 }
 
-var secretKey = []byte("jwt_secret_key")
+var secret string = viper.GetString("jwt_secret")
+
+var secretKey = []byte(secret)
 
 func CreateToken(uuid string) (string, error) {
 	expirationTime := time.Now().Add(24 * time.Hour)
