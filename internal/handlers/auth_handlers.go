@@ -47,6 +47,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &cookie)
 
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprint(w, cookie.Value)
+	fmt.Fprint(w, "Login Succesful")
 
 }
