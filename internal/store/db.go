@@ -6,18 +6,21 @@ import (
 	"log"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/spf13/viper"
 )
 
 var DB *pgxpool.Pool
 
 func InitDB() {
 
-	ctx := context.Background()
-	var connStr any = viper.Get("db_connectionStr")
-	fmt.Println(connStr)
+	// viper.SetConfigFile(".env")
+	// viper.ReadInConfig()
 
-	pool, err := pgxpool.New(ctx, connStr.(string))
+	// connStr := viper.GetString("db_connectionStr")
+	// fmt.Println(connStr)
+
+	ctx := context.Background()
+	connStr := "postgres:27042002@localhost:5432/practisedb"
+	pool, err := pgxpool.New(ctx, connStr)
 	if err != nil {
 		log.Fatalf("Unable to connect to database: %v\n", err)
 	}

@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+
 	store.InitDB()
 	r := routes.RegisterRoutes()
 	log.Println("Server started on :8080")
