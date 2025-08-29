@@ -17,7 +17,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	services.Register(r.Context(), u)
-	json.NewEncoder(w).Encode("user saved")
+	json.NewEncoder(w).Encode("Registration Done")
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
